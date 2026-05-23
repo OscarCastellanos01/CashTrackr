@@ -3,12 +3,24 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\SingInRequest;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
     public function index()
     {
         return view('auth.login');
+    }
+
+    public function store(SingInRequest $request)
+    {
+        $data = $request->validated();
+
+        if(!Auth::attempt($data, true)) {
+            return back()->with('error', 'Credenciales incorrectas.');
+        }
+        
+        return redirect()->route('dashboard');
     }
 }
