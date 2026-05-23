@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SignupRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -18,8 +19,12 @@ class RegisterController extends Controller
     {
         $data = $request->validated();
 
-        User::create($data);
+        $user = User::create($data);
 
-        return view('auth.register');
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect()->route('verification.notice');
     }
 }
