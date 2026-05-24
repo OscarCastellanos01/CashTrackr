@@ -41,4 +41,5 @@ Route::prefix('dashboard')->group(function() {
     Route::post('/budgets', [BudgetController::class, 'store'])->name('budget.store');
     Route::get('/budgets/{budget}/edit', [BudgetController::class, 'edit'])->name('budgets.edit');
     Route::put('/budgets/{budget}/update', [BudgetController::class, 'update'])->name('budgets.update');
+    Route::delete('/budgets/{budget}/destroy', [BudgetController::class, 'destroy'])->name('budgets.destroy');
 });
