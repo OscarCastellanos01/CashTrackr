@@ -70,11 +70,13 @@ class BudgetController extends Controller
         ]);
 
         // $total = $budget->expenses->sum('amount');
+        $spent = $budget->expenses->sum('amount');
 
         $categories = collect(ExpenseCategory::cases());
 
         return Inertia::render('Budgets/Show', [
             'budget' => $budget,
+            'spent' => $spent,
             'categories' => $categories->map(fn ($category) => [
                 'value' => $category->value,
                 'label' => $category->label()
