@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useChat } from "@ai-sdk/react";
 
 type Props = {
     budgetId: number;
