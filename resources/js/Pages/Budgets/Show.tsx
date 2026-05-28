@@ -11,6 +11,7 @@ import ProgressBar from '@/Components/ProgressBar';
 import ExpenseDropdown from '@/Components/ExpenseDropdown';
 import { Expense } from '../../types/expense';
 import DeleteExpenseModal from '@/Components/DeleteExpenseModal';
+import CashTrackrAgent from '@/Components/CashTrackrAgent';
 
 type Props = {
     budget: Budget
@@ -170,6 +171,8 @@ export default function Show({ budget, categories, spent } : Props) {
                     </p>
                 )}
             </section>
+
+            <CashTrackrAgent budgetId={budget.id} />
 
             <ExpenseModal />
             <DeleteExpenseModal />
