@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Ai\Agents\BudgetAssistant;
 use App\Models\Budget;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
@@ -22,6 +23,14 @@ class BudgetChatController extends Controller
             ->implode(' ')
             ?: data_get($lastMessage, 'content', '');
 
-        dd($prompt);
+        $agent = new BudgetAssistant;
+        $agent->budgetId = $budget->id;
+        $agent->hasCategories = $budget->isGeneral();
+
+        if ($budget->isGoal()) {
+            $agent->budgetContext = "Este presupuesto es de tipo Meta/Objetivo llamado '{$budget->name}' con un monto total de \${$budget->amount}. Los gastos NO tienen categorías, solo nombre y monto.";
+        } else {
+            $agent->budgetContext = "Este presupuesto es de tipo General llamado '{$budget->name}' con un monto total de \${$budget->amount}. Los gastos tienen nombre, monto y categoría.";
+        }
     }
 }
