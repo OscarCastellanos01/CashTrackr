@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
+import { toast } from "react-toastify";
+import { router } from "@inertiajs/react";
 
 type Props = {
     budgetId: number;
@@ -13,6 +15,17 @@ export default function CashTrackrAgent({ budgetId, name }: Props) {
         transport: new DefaultChatTransport({
             api: `/dashboard/budgets/${budgetId}/chat`,
         }),
+        onFinish: ({message}) => {
+            const expenseCreated = message.parts.some(part => {
+                // if(!part.output) return null;
+                // return part.output.startsWith("[EXPENSE_CREATED]");
+            })
+
+            if(expenseCreated) {
+                toast.success('Gasto registrado correctamente.');
+                router.reload({only: ['expenses', 'budget']})
+            }
+        }
     });
 
     console.log(messages);
@@ -34,7 +47,11 @@ export default function CashTrackrAgent({ budgetId, name }: Props) {
                     >
                         {m.parts.map((part, i) => {
                             if(part.type !== 'text') return null;
-                            const text = part.text.trim()
+
+                            const text = part.text
+                                .replace("[EXPENSE_CREATED]", '')
+                                .replace("</assistant>", '')
+                                .trim();
 
                             if(!text) return null;
 
