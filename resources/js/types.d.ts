@@ -1,10 +1,15 @@
 import '@inertiajs/core'
 
 declare module '@inertiajs/core' {
-    export interface InteraConfig {
+    export interface InertiaConfig {
         sharedPageProps: {
             flash: {
                 success?: string
+            },
+            user: {
+                id: number
+                name: string
+                email: string
             }
         }
     }
