@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
 
 type Props = {
     budgetId: number;
@@ -7,6 +8,11 @@ type Props = {
 
 export default function CashTrackrAgent({ budgetId }: Props) {
     const [input, setInput] = useState("");
+    const { sendMessage } = useChat({
+        transport: new DefaultChatTransport({
+            api: `/dashboard/budgets/${budgetId}/chat`,
+        }),
+    });
 
     return (
         <section className="p-10 lg:px-5 shadow-lg mt-10">
@@ -15,7 +21,13 @@ export default function CashTrackrAgent({ budgetId }: Props) {
             </h2>
             <div className="space-y-3 mb-4 mt-8"></div>
 
-            <form onSubmit={() => {}} className="flex flex-col gap-2">
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                if(input.trim()) {
+                    sendMessage({text: input});
+                    setInput('');
+                }
+            }} className="flex flex-col gap-2">
                 <textarea
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
