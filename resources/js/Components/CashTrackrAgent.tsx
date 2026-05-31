@@ -8,12 +8,14 @@ type Props = {
 
 export default function CashTrackrAgent({ budgetId }: Props) {
     const [input, setInput] = useState("");
-    const { sendMessage } = useChat({
+    const { sendMessage, messages } = useChat({
         transport: new DefaultChatTransport({
             api: `/dashboard/budgets/${budgetId}/chat`,
         }),
     });
 
+    console.log(messages);
+    
     return (
         <section className="p-10 lg:px-5 shadow-lg mt-10">
             <h2 className="text-3xl font-bold">
