@@ -19,6 +19,11 @@ export default function CashTrackrAgent({ budgetId, name }: Props) {
             const expenseCreated = message.parts.some(part => {
                 // if(!part.output) return null;
                 // return part.output.startsWith("[EXPENSE_CREATED]");
+                const isAddExpenseTool = part.type === 'tool-AddExpense';
+
+                const finished = 'state' in part && part.state === 'output-available'
+
+                return isAddExpenseTool && finished;
             })
 
             if(expenseCreated) {
@@ -27,8 +32,6 @@ export default function CashTrackrAgent({ budgetId, name }: Props) {
             }
         }
     });
-
-    console.log(messages);
     
     return (
         <section className="p-10 lg:px-5 shadow-lg mt-10">
