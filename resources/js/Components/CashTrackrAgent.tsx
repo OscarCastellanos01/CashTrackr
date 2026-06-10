@@ -13,7 +13,7 @@ export default function CashTrackrAgent({ budgetId, name }: Props) {
     const [input, setInput] = useState("");
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const { sendMessage, messages, setMessages } = useChat({
+    const { sendMessage, messages, setMessages, status } = useChat({
         transport: new DefaultChatTransport({
             api: `/dashboard/budgets/${budgetId}/chat`,
         }),
@@ -107,6 +107,8 @@ export default function CashTrackrAgent({ budgetId, name }: Props) {
         }
     }
 
+    const isBusy = status === 'streaming' || status === 'submitted';
+
     return (
         <section className="p-10 lg:px-5 shadow-lg mt-10">
             <h2 className="text-3xl font-bold">
@@ -157,18 +159,22 @@ export default function CashTrackrAgent({ budgetId, name }: Props) {
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Consulta dudas sobre tu Presupuesto o Agrega Gastos"
                     className="w-full border border-gray-300 p-3 rounded-lg text-xl"
+                    disabled={isBusy}
                 />
                 <div className="flex gap-2">
                     <button
                         type="submit"
                         className="flex-1 mt-5 bg-purple-950 hover:bg-purple-800 p-3 rounded-lg text-white font-bold text-xl cursor-pointer disabled:opacity-20"
+                        disabled={isBusy || !input.trim()}
                     >
-                        Consultar
+                        {/* Consultar */}
+                        {status === 'streaming' ? 'Pensando...' : 'Consultar'}
                     </button>
                     <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
                         className="mt-5 bg-amber-500 hover:bg-amber-500 p-3 rounded-lg text-white font-bold text-xl cursor-pointer disabled:opacity-20"
+                        disabled={isBusy}
                     >
                         Subir Ticket
                     </button>
