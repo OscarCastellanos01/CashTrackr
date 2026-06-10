@@ -11,6 +11,7 @@ type Props = {
 
 export default function CashTrackrAgent({ budgetId, name }: Props) {
     const [input, setInput] = useState("");
+    const [isScanning, setIsScanning] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const { sendMessage, messages, setMessages, status } = useChat({
@@ -39,6 +40,8 @@ export default function CashTrackrAgent({ budgetId, name }: Props) {
         const file = e.target.files?.[0];
 
         if(!file) return null;
+
+        setIsScanning(true);
 
         setMessages(prev => [
             ...prev,
@@ -103,11 +106,12 @@ export default function CashTrackrAgent({ budgetId, name }: Props) {
                 },
             ]);
         } finally {
+            setIsScanning(false);
             if(fileInputRef.current) fileInputRef.current.value = ''
         }
     }
 
-    const isBusy = status === 'streaming' || status === 'submitted';
+    const isBusy = status === 'streaming' || status === 'submitted' || isScanning;
 
     return (
         <section className="p-10 lg:px-5 shadow-lg mt-10">
@@ -115,45 +119,60 @@ export default function CashTrackrAgent({ budgetId, name }: Props) {
                 Pregunta sobre tu Presupuesto, añade gastos y más.
             </h2>
             <div className="space-y-3 mb-4 mt-8">
-                {messages.map(m => (
-                    <div 
+                {messages.map((m) => (
+                    <div
                         key={m.id}
                         className={`p-3 rounded-lg max-w-[80%] lg:max-w-[60%] ${
-                            m.role === 'user'
-                                ? 'bg-amber-500 text-white ml-auto'
-                                : 'bg-gray-100 mr-auto'
+                            m.role === "user"
+                                ? "bg-amber-500 text-white ml-auto"
+                                : "bg-gray-100 mr-auto"
                         }`}
                     >
                         {m.parts.map((part, i) => {
-                            if(part.type !== 'text') return null;
+                            if (part.type !== "text") return null;
 
                             const text = part.text
-                                .replace("[EXPENSE_CREATED]", '')
-                                .replace("</assistant>", '')
+                                .replace("[EXPENSE_CREATED]", "")
+                                .replace("</assistant>", "")
                                 .trim();
 
-                            if(!text) return null;
+                            if (!text) return null;
 
                             return (
                                 <p className="text-xl" key={i}>
                                     <strong>
-                                        {m.role === 'user' ? name : 'CashTrackr IA'}:
-                                    </strong>{' '}
+                                        {m.role === "user"
+                                            ? name
+                                            : "CashTrackr IA"}
+                                        :
+                                    </strong>{" "}
                                     {text}
                                 </p>
-                            )
+                            );
                         })}
                     </div>
                 ))}
+
+                {isScanning && (
+                    <div className="bg-gray-100 mr-auto max-w-[80%] lg:max-w-[60%] p-3 rounded-lg">
+                        <p className="text-xl">
+                            <strong>CashTrackr IA: </strong> Escaneando
+                            Ticket...
+                        </p>
+                    </div>
+                )}
             </div>
 
-            <form onSubmit={(e) => {
-                e.preventDefault();
-                if(input.trim()) {
-                    sendMessage({text: input});
-                    setInput('');
-                }
-            }} className="flex flex-col gap-2">
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    if (input.trim()) {
+                        sendMessage({ text: input });
+                        setInput("");
+                    }
+                }}
+                className="flex flex-col gap-2"
+            >
                 <textarea
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
@@ -168,7 +187,7 @@ export default function CashTrackrAgent({ budgetId, name }: Props) {
                         disabled={isBusy || !input.trim()}
                     >
                         {/* Consultar */}
-                        {status === 'streaming' ? 'Pensando...' : 'Consultar'}
+                        {status === "streaming" ? "Pensando..." : "Consultar"}
                     </button>
                     <button
                         type="button"
@@ -176,14 +195,14 @@ export default function CashTrackrAgent({ budgetId, name }: Props) {
                         className="mt-5 bg-amber-500 hover:bg-amber-500 p-3 rounded-lg text-white font-bold text-xl cursor-pointer disabled:opacity-20"
                         disabled={isBusy}
                     >
-                        Subir Ticket
+                        {isScanning ? "Escaneando..." : "Subir Ticket"}
                     </button>
                 </div>
-                <input 
-                    type="file" 
-                    accept="image/*" 
-                    className="hidden" 
-                    ref={fileInputRef} 
+                <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    ref={fileInputRef}
                     onChange={handleImageUpload}
                 />
             </form>
