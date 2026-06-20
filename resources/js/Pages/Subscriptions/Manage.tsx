@@ -1,4 +1,6 @@
+import SubscriptionDowngrade from "@/Components/subscriptions/SubscriptionDowngrade";
 import SubscriptionStatus from "@/Components/subscriptions/SubscriptionsStatus";
+import SubscriptionUpgrade from "@/Components/subscriptions/SubscriptionUpgrade";
 import { Subscription } from "@/types/subscription";
 import { Head } from "@inertiajs/react";
 
@@ -38,6 +40,20 @@ export default function Manage({subscription} : Props) {
                 status_label={subscription.status_label}
                 color={statusColors[subscription.status_label.color]}
             />
+
+            {subscription.on_grace_period ? (
+                <p>Suscripcion Cancelada...</p>
+            ) : (
+                <>
+                    {!isYearly && <SubscriptionUpgrade />}
+                    {isYearly && (
+                        <SubscriptionDowngrade
+                            next_billing_date={subscription.next_billing_date}
+                            ends_at={subscription.ends_at}
+                        />
+                    )}
+                </>
+            )}
         </>
     );
 }
