@@ -45,4 +45,27 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Budget::class);
     }
+
+    public function CurrentPlan() : ?string 
+    {
+        if(!$this->subscribed('default')) {
+            return null;
+        };
+
+        return match (true) {
+            $this->subscribedToPrice(config('services.stripe.price_ai_monthly'), 'default') => 'monthly',
+            $this->subscribedToPrice(config('services.stripe.price_ai_yearly'), 'default') => 'yearly',
+            default => null
+        };
+    }
+
+    public function isOnMonthlyPlan() : bool
+    {
+        return $this->CurrentPlan() === 'monthly';
+    }
+
+    public function isOnYearlyPlan() : bool
+    {
+        return $this->CurrentPlan() === 'yearly';
+    }
 }

@@ -77,4 +77,8 @@ Route::middleware(['auth', 'verified'])->group(function() {
 
     Route::view('/billing/success', 'billing.success')->name('billing.success');
     Route::view('/billing/cancel', 'billing.cancel')->name('billing.cancel');
+
+    Route::get('/plans', function() {
+        return Inertia::render('Pro/Plans');
+    })->name('plans');
 });
