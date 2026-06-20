@@ -1,18 +1,11 @@
 import { Subscription } from "@/types/subscription"
+import { formatDate } from "@/utils";
 
 type Props = {
     isYearly: boolean;
-    color?: string;
-    status_label?: Subscription["status_label"];
+    color: string;
+    status_label: Subscription["status_label"];
     price: Subscription["price"];
-};
-
-const statusColors = {
-    green: "bg-green-50 text-green-600 border-green-200",
-    yellow: "bg-yellow-50 text-yellow-600 border-yellow-200",
-    orange: "bg-orange-50 text-orange-600 border-orange-200",
-    red: "bg-red-50 text-red-600 border-red-200",
-    gray: "bg-gray-50 text-gray-700 border-gray-200",
 };
 
 export default function SubscriptionStatus({isYearly, color, status_label, price} : Props) {
@@ -38,8 +31,18 @@ export default function SubscriptionStatus({isYearly, color, status_label, price
             </div>
 
             <div className="border-t border-slate-300 pt-4 space-y-2 text-sm">
-                <div className={`rounded-lg border p-4 mb-4`}>
-                    <div className="font-bold text-xl"></div>
+                <div className={`rounded-lg border p-4 mb-4 ${color}`}>
+                    <div className="font-bold text-xl">{status_label.text}</div>
+                    {status_label.date ? (
+                        <p className="text-black text-lg">
+                            {status_label.description} {' '}
+                            <span className="font-medium">
+                                {formatDate(status_label.date)}
+                            </span>
+                        </p>
+                    ) : (
+                        <p>{status_label.description}</p>
+                    )}
                 </div>
             </div>
         </div>
