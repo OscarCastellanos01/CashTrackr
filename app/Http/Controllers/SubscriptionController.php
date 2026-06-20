@@ -9,14 +9,20 @@ class SubscriptionController extends Controller
 {
     public function show(Request $request)
     {
-        $subscribed = $request->user()->subscribed('default');
+        $user = $request->user();
+        $subscribed = $user->subscribed('default');
 
         if(!$subscribed) {
             return redirect()->route('plans');
         }
 
-        return Inertia::render('Subscriptions/Manage', [
+        $currentPlan = $user->subscribedToPrice(config('services.stripe.price_ai_yearly'), 'default') ? 'yearly' : 'monthly';
 
+        return Inertia::render('Subscriptions/Manage', [
+            'subscription' => [
+                'plan' => $currentPlan,
+                'price' => $currentPlan === 'Yearly' ? 990 : 90,
+            ]
         ]);
     }
 

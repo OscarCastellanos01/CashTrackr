@@ -1,8 +1,17 @@
+import SubscriptionStatus from "@/Components/subscriptions/SubscriptionsStatus";
+import { Subscription } from "@/types/subscription";
 import { Head } from "@inertiajs/react";
 
-export default function Manage() {
+type Props = {
+    subscription: Subscription
+}
+
+export default function Manage({subscription} : Props) {
 
     const title = 'Administra tu suscripcion';
+
+    const isYearly = subscription.plan === 'yearly';
+
     return (
         <>
             <Head title={title} />
@@ -13,6 +22,11 @@ export default function Manage() {
                     Cambia tu plan, cancela o reactiva tu suscripcion cuando quieras.
                 </p>
             </main>
+
+            <SubscriptionStatus
+                isYearly ={isYearly}
+                price={subscription.price}
+            />
         </>
     );
 }
