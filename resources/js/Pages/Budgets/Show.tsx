@@ -172,7 +172,7 @@ export default function Show({ budget, categories, spent } : Props) {
                 )}
             </section>
 
-            <CashTrackrAgent budgetId={budget.id} name={user.name} />
+            <CashTrackrAgent budgetId={budget.id} name={user.user.name} />
 
             <ExpenseModal />
             <DeleteExpenseModal />
