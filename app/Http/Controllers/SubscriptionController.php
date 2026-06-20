@@ -36,7 +36,7 @@ class SubscriptionController extends Controller
 
     public function swap(Request $request, string $plan)
     {
-
+        dd('desde Swap');
     }
 
     public function cancel(Request $request)
