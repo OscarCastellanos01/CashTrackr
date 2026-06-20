@@ -2,7 +2,9 @@ import SubscriptionDowngrade from "@/Components/subscriptions/SubscriptionDowngr
 import SubscriptionStatus from "@/Components/subscriptions/SubscriptionsStatus";
 import SubscriptionUpgrade from "@/Components/subscriptions/SubscriptionUpgrade";
 import { Subscription } from "@/types/subscription";
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
+import { useEffect } from "react";
+import { toast, ToastContainer } from 'react-toastify';
 
 type Props = {
     subscription: Subscription
@@ -18,9 +20,20 @@ const statusColors = {
 
 export default function Manage({subscription} : Props) {
 
+    const { flash } = usePage().props;
+
     const title = 'Administra tu suscripcion';
 
     const isYearly = subscription.plan === 'yearly';
+
+    useEffect(() => {
+        if(flash.success) {
+            toast.success(flash.success)
+        }
+        if(flash.error) {
+            toast.error(flash.error)
+        }
+    }, [flash])
 
     return (
         <>
@@ -32,28 +45,32 @@ export default function Manage({subscription} : Props) {
                     Cambia tu plan, cancela o reactiva tu suscripcion cuando
                     quieras.
                 </p>
+
+                <SubscriptionStatus
+                    isYearly={isYearly}
+                    price={subscription.price}
+                    status_label={subscription.status_label}
+                    color={statusColors[subscription.status_label.color]}
+                />
+
+                {subscription.on_grace_period ? (
+                    <p>Suscripcion Cancelada...</p>
+                ) : (
+                    <>
+                        {!isYearly && <SubscriptionUpgrade />}
+                        {isYearly && (
+                            <SubscriptionDowngrade
+                                next_billing_date={
+                                    subscription.next_billing_date
+                                }
+                                ends_at={subscription.ends_at}
+                            />
+                        )}
+                    </>
+                )}
             </main>
 
-            <SubscriptionStatus
-                isYearly={isYearly}
-                price={subscription.price}
-                status_label={subscription.status_label}
-                color={statusColors[subscription.status_label.color]}
-            />
-
-            {subscription.on_grace_period ? (
-                <p>Suscripcion Cancelada...</p>
-            ) : (
-                <>
-                    {!isYearly && <SubscriptionUpgrade />}
-                    {isYearly && (
-                        <SubscriptionDowngrade
-                            next_billing_date={subscription.next_billing_date}
-                            ends_at={subscription.ends_at}
-                        />
-                    )}
-                </>
-            )}
+            <ToastContainer />
         </>
     );
 }

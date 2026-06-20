@@ -25,7 +25,7 @@ class SubscriptionController extends Controller
         return Inertia::render('Subscriptions/Manage', [
             'subscription' => [
                 'plan' => $currentPlan,
-                'price' => $currentPlan === 'Yearly' ? 990 : 90,
+                'price' => $currentPlan === 'yearly' ? 990 : 90,
                 'status_label' => $this->buildStatusLabel($subscription, $nextBillingDate),
                 'on_grace_period' => $subscription->onGracePeriod(),
                 'next_billing_date' => $nextBillingDate,
@@ -36,7 +36,34 @@ class SubscriptionController extends Controller
 
     public function swap(Request $request, string $plan)
     {
-        dd('desde Swap');
+        $prices = [
+            'monthly' => config('services.stripe.price_ai_monthly'),
+            'yearly' => config('services.stripe.price_ai_yearly'),
+        ];
+
+        abort_unless(isset($prices[$plan]), 404);
+
+        $user = $request->user();
+
+        $subscription = $user->subscription('default');
+
+        $currentPlan = $user->subscribedToPrice(
+            config('services.stripe.price_ai_yearly'),
+            'default'
+        ) ? 'yearly' : 'monthly';
+
+        if($currentPlan === 'yearly' && $plan === 'monthly') {
+            return back()->with('error', 'No es posible cambiar de plan anual a mensual..');
+        }
+
+        if($currentPlan === $plan) {
+            return back()->with('error', 'Ya estas en este plan.');
+        }
+
+        $subscription->swap($prices[$plan]);
+        cache()->forget("stripe.next_billing.{$subscription->id}");
+
+        return redirect()->route('subscription.manage')->with('success', 'Bienvenido(a) al plan Anual! Disfruta de tu ahorro.');
     }
 
     public function cancel(Request $request)
