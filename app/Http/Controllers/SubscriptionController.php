@@ -68,7 +68,9 @@ class SubscriptionController extends Controller
 
     public function cancel(Request $request)
     {
-        dd('desde cancel');
+        $request->user()->subscription('default')->cancel();
+
+        return back()->with('success', ' Tu  suscripcion ha sido cancelada, mantendras el acceso hasta el final del periodo pagado.');
     }
 
     public function resume(Request $request)
@@ -115,7 +117,7 @@ class SubscriptionController extends Controller
         if ($subscription->onGracePeriod()) {
             return [
                 'text' => 'Cancelada',
-                'description' => 'Acceso hasta',
+                'description' => 'Acceso hasta el ',
                 'date' => $subscription->ends_at?->toIso8601String(),
                 'color' => 'orange',
             ];
