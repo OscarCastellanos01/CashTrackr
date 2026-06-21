@@ -68,7 +68,7 @@ class SubscriptionController extends Controller
 
     public function cancel(Request $request)
     {
-
+        dd('desde cancel');
     }
 
     public function resume(Request $request)

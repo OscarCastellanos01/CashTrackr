@@ -1,3 +1,4 @@
+import SubscriptionCancellation from "@/Components/subscriptions/SubscriptionCancellation";
 import SubscriptionDowngrade from "@/Components/subscriptions/SubscriptionDowngrade";
 import SubscriptionStatus from "@/Components/subscriptions/SubscriptionsStatus";
 import SubscriptionUpgrade from "@/Components/subscriptions/SubscriptionUpgrade";
@@ -66,6 +67,10 @@ export default function Manage({subscription} : Props) {
                                 ends_at={subscription.ends_at}
                             />
                         )}
+
+                        <SubscriptionCancellation
+                            next_billing_date={subscription.next_billing_date}
+                        />
                     </>
                 )}
             </main>
