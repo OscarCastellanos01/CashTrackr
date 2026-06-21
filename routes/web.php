@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\BudgetChatController;
@@ -27,6 +28,9 @@ Route::get('/auth/login', [LoginController::class, 'index'])->name('login');
 Route::post('/auth/login', [LoginController::class, 'store'])->name('login.store');
 
 Route::post('/auth/logout', [LogoutController::class, 'store'])->name('logout.store');
+
+Route::get('/auth/forgot-password', [ForgotPasswordController::class, 'index'])->name('password.request');
+Route::post('/auth/forgot-password', [ForgotPasswordController::class, 'store'])->name('password.email');
 
 Route::get('/email/verify/{id}/{hash}', function(EmailVerificationRequest $request) {
     $request->fulfill();
