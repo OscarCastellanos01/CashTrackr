@@ -29,7 +29,8 @@ class SubscriptionController extends Controller
                 'status_label' => $this->buildStatusLabel($subscription, $nextBillingDate),
                 'on_grace_period' => $subscription->onGracePeriod(),
                 'next_billing_date' => $nextBillingDate,
-                'ends_at' => $subscription->ends_at?->toIso8601String()
+                'ends_at' => $subscription->ends_at?->toIso8601String(),
+                'canceled' => $subscription->canceled(),
             ]
         ]);
     }
@@ -75,7 +76,9 @@ class SubscriptionController extends Controller
 
     public function resume(Request $request)
     {
+        $request->user()->subscription('default')->resume();
 
+        return back()->with('success', 'Bienvenido(a) de vuelta! Tu suscripcion esta activa.');
     }
 
     private function getNextBillingDate(Subscription $subscription): ?string

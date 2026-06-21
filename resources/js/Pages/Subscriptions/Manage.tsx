@@ -1,5 +1,6 @@
 import SubscriptionCancellation from "@/Components/subscriptions/SubscriptionCancellation";
 import SubscriptionDowngrade from "@/Components/subscriptions/SubscriptionDowngrade";
+import SubscriptionResume from "@/Components/subscriptions/SubscriptionResume";
 import SubscriptionStatus from "@/Components/subscriptions/SubscriptionsStatus";
 import SubscriptionUpgrade from "@/Components/subscriptions/SubscriptionUpgrade";
 import { Subscription } from "@/types/subscription";
@@ -55,7 +56,9 @@ export default function Manage({subscription} : Props) {
                 />
 
                 {subscription.on_grace_period ? (
-                    <p>Suscripcion Cancelada...</p>
+                    <SubscriptionResume
+                        ends_at={subscription.ends_at}
+                    />
                 ) : (
                     <>
                         {!isYearly && <SubscriptionUpgrade />}
