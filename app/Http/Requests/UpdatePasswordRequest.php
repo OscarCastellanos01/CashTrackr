@@ -2,28 +2,26 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePasswordRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+    public function messages(): array
     {
-        return false;
+        return [
+            'current_password.required' => 'Debes ingresar tu contraseña actual.',
+            'current_password.current_password' => 'La contraseña actual es incorrecta.',
+            'password.required' => 'La Nueva Contraseña no puede ir vacia',
+            'password.min' => 'La Contraseña debe tener al menos :min caracteres.',
+            'password.confirmed' => 'Las Nuevas Contraseñas no coinciden.',
+        ];
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'confirmed', 'min:8'],
         ];
     }
 }
