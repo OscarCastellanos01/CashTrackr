@@ -16,7 +16,7 @@ export default function CashTrackrAgent({ budgetId, name }: Props) {
 
     const { sendMessage, messages, setMessages, status } = useChat({
         transport: new DefaultChatTransport({
-            api: `/dashboard/budgets/${budgetId}/chat`,
+            api: `/budgets/${budgetId}/chat`,
         }),
         onFinish: ({message}) => {
             const expenseCreated = message.parts.some(part => {
@@ -60,7 +60,7 @@ export default function CashTrackrAgent({ budgetId, name }: Props) {
             formData.append('image', file);
 
             const response = await fetch(
-                `/dashboard/budgets/${budgetId}/scan-ticket`,
+                `/budgets/${budgetId}/scan-ticket`,
                 {
                     method: "POST",
                     headers: {
