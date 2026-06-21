@@ -1,3 +1,4 @@
+import InputError from "@/Components/InputError";
 import AppLayout from "@/Layouts/AppLayout";
 import { useForm, usePage } from "@inertiajs/react";
 import { route } from "ziggy-js";
@@ -35,7 +36,7 @@ export default function UpdateProfile() {
                 </div>
             </div>
 
-            <form 
+            <form
                 className="mt-14 space-y-3 max-w-2xl mx-auto"
                 onSubmit={submit}
             >
@@ -52,6 +53,7 @@ export default function UpdateProfile() {
                         value={data.name}
                         onChange={(e) => setData("name", e.target.value)}
                     />
+                    {errors.name && <InputError>{errors.name}</InputError>}
                 </div>
 
                 <div className="flex flex-col gap-2">
@@ -67,6 +69,7 @@ export default function UpdateProfile() {
                         value={data.email}
                         onChange={(e) => setData("email", e.target.value)}
                     />
+                    {errors.email && <InputError>{errors.email}</InputError>}
                 </div>
 
                 <input
