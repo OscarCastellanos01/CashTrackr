@@ -87,6 +87,10 @@ declare module 'ziggy-js' {
             "binding": "id"
         }
     ],
+    "settings.profile": [],
+    "settings.profile.update": [],
+    "settings.password": [],
+    "settings.password.update": [],
     "budgets.chat": [
         {
             "name": "budget",
@@ -119,6 +123,7 @@ declare module 'ziggy-js' {
     ],
     "subscription.cancel": [],
     "subscription.resume": [],
+    "billing": [],
     "storage.local": [
         {
             "name": "path",
