@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BudgetChatController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ExpenseController;
@@ -31,6 +32,9 @@ Route::post('/auth/logout', [LogoutController::class, 'store'])->name('logout.st
 
 Route::get('/auth/forgot-password', [ForgotPasswordController::class, 'index'])->name('password.request');
 Route::post('/auth/forgot-password', [ForgotPasswordController::class, 'store'])->name('password.email');
+
+Route::get('/auth/reset-password/{token}', [ResetPasswordController::class, 'index'])->name('password.reset');
+Route::post('/auth/reset-password', [ResetPasswordController::class, 'store'])->name('password.update');
 
 Route::get('/email/verify/{id}/{hash}', function(EmailVerificationRequest $request) {
     $request->fulfill();
