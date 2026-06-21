@@ -1,3 +1,4 @@
+import InputError from "@/Components/InputError";
 import AppLayout from "@/Layouts/AppLayout";
 import { useForm } from "@inertiajs/react";
 import { route } from "ziggy-js";
@@ -35,7 +36,7 @@ export default function UpdatePassword() {
                 </div>
             </div>
 
-            <form 
+            <form
                 className="mt-14 space-y-3 max-w-2xl mx-auto"
                 onSubmit={submit}
             >
@@ -57,6 +58,9 @@ export default function UpdatePassword() {
                             setData("current_password", e.target.value)
                         }
                     />
+                    {errors.current_password && (
+                        <InputError>{errors.current_password}</InputError>
+                    )}
                 </div>
 
                 <div className="flex flex-col gap-2">
@@ -72,6 +76,9 @@ export default function UpdatePassword() {
                         value={data.password}
                         onChange={(e) => setData("password", e.target.value)}
                     />
+                    {errors.password && (
+                        <InputError>{errors.password}</InputError>
+                    )}
                 </div>
 
                 <div className="flex flex-col gap-2 mt-4">
